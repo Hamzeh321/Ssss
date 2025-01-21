@@ -1,0 +1,65 @@
+<?php
+// استقبال البيانات المرسلة من الصفحة
+$data = file_get_contents('php://input');
+$order = json_decode($data, true);
+
+// تحضير البيانات للحفظ
+$items = $order['items'];
+$address = $order['address'];
+$recipientName = $order['recipientName'];
+$creditCard = $order['creditCard'];
+$total = $order['total'];
+$timestamp = $order['timestamp'];
+
+// تحويل البيانات إلى نص
+$orderText = "الوقت: $timestamp\n";
+$orderText .= "اسم المستلم: $recipientName\n";
+$orderText .= "العنوان: $address\n";
+$orderText .= "آخر 4 أرقام من البطاقة: $creditCard\n";
+$orderText .= "الإجمالي: $total دولار\n";
+$orderText .= "المنتجات:\n";
+
+foreach ($items as $item) {
+  $orderText .= "- {$item['item']} (الكمية: {$item['quantity']}, السعر: {$item['price']} دولار)\n";
+}
+
+$orderText .= "-------------------------\n";
+
+// حفظ البيانات في ملف نصي
+file_put_contents('orders.txt', $orderText, FILE_APPEND);
+
+// إرسال رسالة نجاح
+echo "تم حفظ الطلب بنجاح!";
+?><?php
+// استقبال البيانات المرسلة من الصفحة
+$data = file_get_contents('php://input');
+$order = json_decode($data, true);
+
+// تحضير البيانات للحفظ
+$items = $order['items'];
+$address = $order['address'];
+$recipientName = $order['recipientName'];
+$creditCard = $order['creditCard'];
+$total = $order['total'];
+$timestamp = $order['timestamp'];
+
+// تحويل البيانات إلى نص
+$orderText = "الوقت: $timestamp\n";
+$orderText .= "اسم المستلم: $recipientName\n";
+$orderText .= "العنوان: $address\n";
+$orderText .= "آخر 4 أرقام من البطاقة: $creditCard\n";
+$orderText .= "الإجمالي: $total دولار\n";
+$orderText .= "المنتجات:\n";
+
+foreach ($items as $item) {
+  $orderText .= "- {$item['item']} (الكمية: {$item['quantity']}, السعر: {$item['price']} دولار)\n";
+}
+
+$orderText .= "-------------------------\n";
+
+// حفظ البيانات في ملف نصي
+file_put_contents('orders.txt', $orderText, FILE_APPEND);
+
+// إرسال رسالة نجاح
+echo "تم حفظ الطلب بنجاح!";
+?>
