@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="استمتع بأشهى المعجنات الطازجة يوميًا!">
+  <title>معجنات شهية</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+    <h1>معجنات شهية</h1>
+    <p>أفضل أنواع المعجنات الطازجة يوميًا!</p>
+    <input type="text" id="search" placeholder="ابحث عن معجنات..." oninput="filterProducts()">
+  </header>
+
+  <!-- الشريط الجانبي -->
+  <div class="sidebar" id="sidebar">
+    <a href="#">تسجيل الدخول</a>
+    <a href="#">إنشاء حساب</a>
+    <a href="#">خانة للتواصل</a>
+    <div class="contact-info">
+      <p>رقم الهاتف: 55555555</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="grid">
+      <!-- المنتجات -->
+      <div class="card">
+        <img src="https://i.postimg.cc/WpnZ4cFV/image.jpg" alt="بيتزا مارغريتا" loading="lazy">
+        <h2>بيتزا مارغريتا</h2>
+        <p>عجينة هشة مع صلصة الطماطم الطازجة وجبنة الموزاريلا.</p>
+        <div class="rating">⭐⭐⭐⭐☆</div>
+        <div class="price">10 دولار</div>
+        <input type="number" min="1" value="1" id="quantity-0">
+        <button class="button" onclick="addToCart('بيتزا مارغريتا', 10, 'quantity-0')" aria-label="أضف بيتزا مارغريتا إلى السلة">اطلب الآن</button>
+      </div>
+      <!-- باقي المنتجات بنفس الهيكل -->
+    </div>
+  </div>
+
+  <div id="cartButton" onclick="openCartModal()">
+    🛒 <span id="cartCount">0</span>
+  </div>
+
+  <div id="cartModal" class="modal">
+    <div class="modal-content">
+      <h2>سلة المشتريات</h2>
+      <div id="cartItems"></div>
+      <p id="totalPrice"></p>
+      <input type="text" id="address" placeholder="أدخل عنوان السكن" required>
+      <input type="text" id="recipientName" placeholder="اسم المستلم" required>
+      <input type="text" id="creditCard" placeholder="رقم بطاقة الأمان (16 رقمًا)" required maxlength="16">
+      <button onclick="confirmOrder()">تأكيد الطلب</button>
+      <button onclick="closeModal()">إغلاق</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 جميع الحقوق محفوظة - معجنات شهية</p>
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
