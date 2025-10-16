@@ -1,67 +1,186 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="استمتع بأشهى المعجنات الطازجة يوميًا!">
-  <title>معجنات شهية</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>معلم الرياضيات - تسجيل الطلاب</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      background-color: #f0f6ff;
+      color: #222;
+      direction: rtl;
+    }
+    header {
+      text-align: center;
+      padding: 30px 10px;
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      color: white;
+    }
+    header img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      object-fit: cover;
+      margin-bottom: 15px;
+    }
+    header h1 {
+      margin: 10px 0;
+      font-size: 28px;
+    }
+    main {
+      text-align: center;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+    p {
+      line-height: 1.8;
+      font-size: 18px;
+    }
+    .button {
+      display: inline-block;
+      background-color: #2563eb;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 8px;
+      margin-top: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .button:hover {
+      background-color: #1d4ed8;
+    }
+    footer {
+      text-align: center;
+      background: #e2e8f0;
+      padding: 20px;
+      font-size: 14px;
+      margin-top: 40px;
+    }
+    /* نموذج التسجيل */
+    #register-page {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+    form {
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: inline-block;
+      text-align: right;
+      width: 100%;
+      max-width: 500px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #2563eb;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #1e40af;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
-    <h1>معجنات شهية</h1>
-    <p>أفضل أنواع المعجنات الطازجة يوميًا!</p>
-    <input type="text" id="search" placeholder="ابحث عن معجنات..." oninput="filterProducts()">
+    <img src="https://i.postimg.cc/KvjvTjqm/JPEG-5299698858365424583.jpg" alt="صورة المعلم">
+    <h1>الأستاذ حمزة ابوحرب</h1>
   </header>
 
-  <!-- الشريط الجانبي -->
-  <div class="sidebar" id="sidebar">
-    <a href="#">تسجيل الدخول</a>
-    <a href="#">إنشاء حساب</a>
-    <a href="#">خانة للتواصل</a>
-    <div class="contact-info">
-      <p>رقم الهاتف: 55555555</p>
-    </div>
-  </div>
+  <main id="home-page">
+    <p>
+      معلم رياضيات يمتلك خبرة تدريسية لمدة عام في تدريس الصفوف من السادس إلى التاسع، يتميز بقدرته على تبسيط المفاهيم الرياضية المعقدة بأساليب حديثة وممتعة تناسب مستويات الطلبة المختلفة. أعمل على تنمية التفكير التحليلي والمنطقي لدى الطلبة من خلال أنشطة تفاعلية وتمارين تطبيقية، وأسعى إلى خلق بيئة تعليمية محفزة تشجع على حب مادة الرياضيات والإبداع في حل المسائل.
+    </p>
+    <a href="#" class="button" onclick="openRegister()">تسجيل طالب جديد</a>
+  </main>
 
-  <div class="container">
-    <div class="grid">
-      <!-- المنتجات -->
-      <div class="card">
-        <img src="https://i.postimg.cc/WpnZ4cFV/image.jpg" alt="بيتزا مارغريتا" loading="lazy">
-        <h2>بيتزا مارغريتا</h2>
-        <p>عجينة هشة مع صلصة الطماطم الطازجة وجبنة الموزاريلا.</p>
-        <div class="rating">⭐⭐⭐⭐☆</div>
-        <div class="price">10 دولار</div>
-        <input type="number" min="1" value="1" id="quantity-0">
-        <button class="button" onclick="addToCart('بيتزا مارغريتا', 10, 'quantity-0')" aria-label="أضف بيتزا مارغريتا إلى السلة">اطلب الآن</button>
-      </div>
-      <!-- باقي المنتجات بنفس الهيكل -->
-    </div>
-  </div>
+  <section id="register-page">
+    <h2>تسجيل طالب جديد</h2>
+    <form id="studentForm" onsubmit="sendEmail(event)">
+      <label>اسم الطالب *</label>
+      <input type="text" id="studentName" required>
 
-  <div id="cartButton" onclick="openCartModal()">
-    🛒 <span id="cartCount">0</span>
-  </div>
+      <label>رقم الهاتف (الأساسي) *</label>
+      <input type="tel" id="mainPhone" required>
 
-  <div id="cartModal" class="modal">
-    <div class="modal-content">
-      <h2>سلة المشتريات</h2>
-      <div id="cartItems"></div>
-      <p id="totalPrice"></p>
-      <input type="text" id="address" placeholder="أدخل عنوان السكن" required>
-      <input type="text" id="recipientName" placeholder="اسم المستلم" required>
-      <input type="text" id="creditCard" placeholder="رقم بطاقة الأمان (16 رقمًا)" required maxlength="16">
-      <button onclick="confirmOrder()">تأكيد الطلب</button>
-      <button onclick="closeModal()">إغلاق</button>
-    </div>
-  </div>
+      <label>رقم هاتف احتياطي</label>
+      <input type="tel" id="optionalPhone">
+
+      <label>اختر الصف *</label>
+      <select id="grade" required>
+        <option value="">-- اختر الصف --</option>
+        <option>الصف السادس</option>
+        <option>الصف السابع</option>
+        <option>الصف الثامن</option>
+        <option>الصف التاسع</option>
+        <option>الصف العاشر</option>
+      </select>
+
+      <button type="submit">تأكيد التسجيل</button>
+    </form>
+  </section>
 
   <footer>
-    <p>© 2025 جميع الحقوق محفوظة - معجنات شهية</p>
+    جميع الحقوق محفوظة © 2025<br>
+    إربد - الحصن - طريق كتم
   </footer>
 
-  <script src="scripts.js"></script>
+  <!-- ✅ EmailJS Scripts -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function(){
+      emailjs.init({
+        publicKey: "B_nVtAlMDQPInTVB4",
+      });
+    })();
+
+    function openRegister() {
+      document.getElementById('home-page').style.display = 'none';
+      document.getElementById('register-page').style.display = 'block';
+      window.scrollTo(0,0);
+    }
+
+    function sendEmail(event) {
+      event.preventDefault();
+
+      const templateParams = {
+        student_name: document.getElementById("studentName").value,
+        main_phone: document.getElementById("mainPhone").value,
+        optional_phone: document.getElementById("optionalPhone").value,
+        grade: document.getElementById("grade").value,
+      };
+
+      emailjs.send("service_mshkh7p", "YOUR_TEMPLATE_ID", templateParams)
+        .then(function(response) {
+          alert("✅ تم إرسال بيانات الطالب بنجاح!");
+          document.getElementById("studentForm").reset();
+        }, function(error) {
+          alert("❌ حدث خطأ أثناء الإرسال، حاول مرة أخرى.");
+          console.log("FAILED...", error);
+        });
+    }
+  </script>
 </body>
 </html>
