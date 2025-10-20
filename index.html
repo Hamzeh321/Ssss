@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>منصة الأستاذ حمزة - دروس الرياضيات وتسجيل الطلاب</title>
+  
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
     :root{
@@ -316,8 +317,26 @@
   </div>
 
   <script>
-    /* ========== DATA STRUCTURE in localStorage ========== */
+    /* ========== 1. Simple Hashing Function (Custom & Reliable for browser) ========== */
+    // نستخدم دالة تجزئة بسيطة جداً ولكنها ثابتة النتائج لتجنب مشاكل التشفير المعقد. لم تعد مستخدمة في الدخول
+    function simpleHash(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return Math.abs(hash).toString(); // Return positive string number
+    }
+    /* ========== END Simple Hash Function ========== */
+
+    /* ========== DATA STRUCTURE in localStorage - تم التعديل هنا ========== */
     const STORAGE_KEY = 'hamzeh_platform_v1';
+    
+    // كلمة المرور الأصلية: Hh200321$
+    const ADMIN_PASSWORD_CLEAR = 'Hh200321$'; // تم التعديل إلى مقارنة النص الواضح لتصحيح مشكلة "بيانات الدخول خاطئة"
+    const ADMIN_USERNAME = 'tchhamzeh'; 
+
 
     const defaultData = {
       grades: {
@@ -327,26 +346,23 @@
         "9": { title:"الصف التاسع", desc:"تحضير لامتحانات والمهارات", sem1:{desc:"", items:[]}, sem2:{desc:"", items:[]}},
         "10":{ title:"الصف العاشر", desc:"دروس متقدمة وتطبيقية", sem1:{desc:"", items:[]}, sem2:{desc:"", items:[]}}
       },
-      // تم التعديل هنا: هذه البيانات هي التي تستخدم إذا لم يتم العثور على بيانات في المتصفح (localStorage)
-      admin: { username: "tchhamzeh", password: "Hh200321$" }
+      // البيانات المخزنة محلياً لا تتضمن كلمة المرور الصريحة بعد الآن
+      admin: { username: ADMIN_USERNAME }
     };
 
-    // هذا السطر يقرأ البيانات من الذاكرة المحلية (localStorage).
-    // إذا كانت الذاكرة تحتوي على بيانات قديمة، فإنها ستحجب البيانات الجديدة في defaultData.
-    // يجب التأكد من استخدام البيانات الجديدة كـ default.
     let storedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
     
     // إذا كانت هناك حالة مخزنة، نستخدمها.
-    // وإذا لم يكن هناك، نستخدم defaultData.
-    // الأهم: إذا كانت هناك حالة مخزنة، نضمن تحديث بيانات المدير داخلها لمرة واحدة فقط.
     let state = storedState || defaultData;
     
-    // تأكيد تحديث بيانات المدير في الحالة الحالية (سواء المخزنة أو الافتراضية) لضمان العمل.
-    if (!storedState || state.admin.username !== "tchhamzeh") {
-        state.admin.username = "tchhamzeh";
-        state.admin.password = "Hh200321$";
-        saveState(); // حفظ التعديل الجديد على الذاكرة المحلية
+    // إذا كانت البيانات المخزنة قديمة (تحتوي على كلمة المرور الصريحة)، نقوم بالتحديث
+    if (storedState && storedState.admin.password) {
+        delete state.admin.password; 
+        saveState();
     }
+    // نتأكد من أن اسم المستخدم صحيح دائماً
+    state.admin.username = ADMIN_USERNAME; 
+
 
     // persist to storage helper
     function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
@@ -483,7 +499,7 @@
       });
     }
 
-    /* ========== ADMIN (hidden) ========== */
+    /* ========== ADMIN (hidden) - تم تعديل دالة handleLoginSubmit هنا ========== */
     let isAdmin = false;
     function openLogin(){
       showModal(getLoginHtml(), true);
@@ -502,11 +518,12 @@
 
     /* login handling */
     function handleLoginSubmit(){
+      
       const user = document.getElementById('adminUser').value.trim();
       const pass = document.getElementById('adminPass').value.trim();
       
-      // تأكد من استخدام state.admin المحدثة
-      if(user === state.admin.username && pass === state.admin.password){
+      // مقارنة مباشرة بالنص الواضح لتصحيح مشكلة بيانات الدخول الخاطئة
+      if(user === ADMIN_USERNAME && pass === ADMIN_PASSWORD_CLEAR){ 
         isAdmin = true;
         closeModal();
         alert('✅ تم تسجيل الدخول كمدير');
@@ -556,7 +573,7 @@
     }
     modalBackdrop.addEventListener('click', (e)=>{ if(e.target===modalBackdrop) closeModal(); });
 
-    /* login html */
+    /* login html - تم التعديل هنا لتوضيح كلمة المرور */
     function getLoginHtml(){
       return `
         <h3>تسجيل دخول المعلم</h3>
@@ -568,7 +585,7 @@
           <button class="btn" onclick="handleLoginSubmit()">دخول</button>
           <button class="btn ghost" onclick="closeModal()">إلغاء</button>
         </div>
-        <div style="margin-top:10px;color:var(--muted);font-size:13px">اسم المستخدم: <strong>${state.admin.username}</strong> — كلمة المرور محفوظة محليًا.</div>
+        <div style="margin-top:10px;color:var(--muted);font-size:13px">اسم المستخدم: <strong>${ADMIN_USERNAME}</strong> — كلمة المرور (للتذكير): <strong>Hh200321$</strong>.</div>
       `;
     }
 
@@ -844,9 +861,6 @@
     }
 
     /* initial render */
-    // Removed the initial renderGrades() call as requested.
-
-    // ensure the welcome section is open initially
     openWelcome(); 
     // end of script
   </script>
