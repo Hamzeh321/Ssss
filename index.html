@@ -1,186 +1,854 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>معلم الرياضيات - تسجيل الطلاب</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>منصة الأستاذ حمزة - دروس الرياضيات وتسجيل الطلاب</title>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Cairo', sans-serif;
-      background-color: #f0f6ff;
-      color: #222;
-      direction: rtl;
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+    :root{
+      --blue-600:#2563eb;
+      --blue-500:#3b82f6;
+      --bg:#f0f6ff;
+      --card:#ffffff;
+      --muted:#64748b;
+      --radius:12px;
     }
-    header {
-      text-align: center;
-      padding: 30px 10px;
-      background: linear-gradient(135deg, #3b82f6, #60a5fa);
-      color: white;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Cairo", sans-serif;
+      background: linear-gradient(180deg,var(--bg),#dbeafe);
+      color:#0f172a;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      direction:rtl;
     }
-    header img {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      border: 4px solid #fff;
-      object-fit: cover;
-      margin-bottom: 15px;
+
+    /* Header */
+    header.app-header{
+      background: linear-gradient(135deg,var(--blue-600),var(--blue-500));
+      color:white;
+      padding:28px 20px;
+      display:flex;
+      gap:20px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
     }
-    header h1 {
-      margin: 10px 0;
-      font-size: 28px;
+    .brand{
+      display:flex;
+      gap:16px;
+      align-items:center;
     }
-    main {
-      text-align: center;
+    .brand img{
+      width:84px;height:84px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.15);
+      transition:transform .25s;
+    }
+    .brand img:hover{transform:scale(1.06)}
+    .brand h1{margin:0;font-size:20px}
+    .brand p{margin:0;font-size:13px;opacity:0.95}
+
+    /* layout */
+    .container{
+      max-width:1100px;margin:18px auto;padding:20px;
+      display:grid;grid-template-columns: 320px 1fr;gap:20px;
+    }
+
+    /* sidebar */
+    aside.sidebar{
+      background:var(--card);padding:18px;border-radius:var(--radius);
+      box-shadow:0 8px 30px rgba(15,23,42,0.06);
+      height:fit-content;
+    }
+    aside h3{margin:0 0 10px 0}
+    
+    /* Removed grade-list from sidebar for public view, but kept styling for admin usage */
+    .grade-list{display:flex;flex-direction:column;gap:8px}
+    .grade-item{
+      display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;
+      cursor:pointer;border:1px solid #e6eefc;background:linear-gradient(180deg,#fbfdff,#f8fbff);
+      transition:0.18s;
+    }
+    .grade-item:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(37,99,235,0.06)}
+    .small-muted{font-size:13px;color:var(--muted)}
+
+    /* main content cards */
+    main.content{
+      min-height:320px;
+    }
+    .card{
+      background:var(--card);padding:18px;border-radius:var(--radius);
+      box-shadow:0 8px 30px rgba(15,23,42,0.06);margin-bottom:16px;
+    }
+    .flex-row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+
+    /* semester buttons */
+    .sem-buttons{display:flex;gap:8px}
+    .btn{background:linear-gradient(180deg,var(--blue-600),var(--blue-500));color:white;padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700;text-decoration: none;}
+    .btn.ghost{background:transparent;color:var(--blue-600);border:1px solid rgba(59,130,246,0.12)}
+    .btn.danger{background:#ef4444}
+    
+    /* New: Welcome Actions Style */
+    .welcome-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .welcome-actions .btn {
+      font-size: 16px;
+      padding: 12px 20px;
+      min-width: 180px;
+    }
+
+    /* gallery of items */
+    .items-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:14px}
+    .item-card{background:#f8fafc;padding:12px;border:1px solid rgba(2,6,23,0.03);border-radius:10px;}
+    .item-title{font-weight:700;margin-bottom:6px}
+    .item-type{font-size:13px;color:var(--muted);margin-bottom:8px}
+    .item-actions{display:flex;gap:8px;justify-content:flex-start;margin-top:8px}
+    .item-actions button{padding:6px 8px;border-radius:8px;border:none;cursor:pointer}
+
+    /* iframe styling */
+    .video-frame{width:100%;height:200px;border-radius:8px;border:0;background:#000}
+
+    /* admin button (hidden) */
+    #admin-button{
+      position:fixed;left:18px;bottom:20px;width:48px;height:48px;border-radius:50%;
+      background:var(--blue-600);color:white;border:none;font-size:18px;cursor:pointer;box-shadow:0 8px 24px rgba(37,99,235,0.18);z-index:999;
+      transition:transform .18s;
+    }
+    #admin-button:hover{transform:rotate(90deg)}
+
+    /* modals */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.5);display:none;align-items:center;justify-content:center;z-index:1200}
+    .modal{width:920px;max-width:95%;background:var(--card);padding:18px;border-radius:12px;box-shadow:0 20px 60px rgba(2,6,23,0.2);max-height:86vh;overflow:auto}
+    .form-row{display:flex;gap:8px;margin-top:10px}
+    .form-row input,.form-row select,.form-row textarea{flex:1;padding:10px;border-radius:8px;border:1px solid #e6eefc;font-size:15px}
+    textarea{min-height:70px;resize:vertical}
+    
+    /* New: Registration Form Styles */
+    #registerSection h2{margin-top:0;}
+    #registerSection form {
+      background: #f8fafc;
       padding: 20px;
-      max-width: 700px;
-      margin: auto;
+      border-radius: 10px;
+      box-shadow: none;
+      border:1px solid rgba(2,6,23,0.03);
+      display: block;
+      text-align: right;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto; /* Center the form */
     }
-    p {
-      line-height: 1.8;
-      font-size: 18px;
+    #registerSection label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: 600;
+      font-size: 15px;
     }
-    .button {
-      display: inline-block;
-      background-color: #2563eb;
-      color: white;
-      padding: 12px 25px;
+    #registerSection input, #registerSection select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #e6eefc;
       border-radius: 8px;
-      margin-top: 25px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
+      font-size: 16px;
+      background-color: #fff;
     }
-    .button:hover {
-      background-color: #1d4ed8;
+    #registerSection .btn {
+      width: auto;
+      display: inline-block;
+      margin-top: 20px;
     }
-    footer {
+
+    /* New: Footer Style */
+    footer.app-footer {
       text-align: center;
       background: #e2e8f0;
       padding: 20px;
       font-size: 14px;
       margin-top: 40px;
+      color: #333;
     }
-    /* نموذج التسجيل */
-    #register-page {
-      display: none;
-      text-align: center;
-      padding: 20px;
-    }
-    form {
-      background: #fff;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      display: inline-block;
-      text-align: right;
-      width: 100%;
-      max-width: 500px;
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: 600;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    button {
-      background-color: #2563eb;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 20px;
-      transition: 0.3s;
-    }
-    button:hover {
-      background-color: #1e40af;
+
+    /* responsive */
+    @media (max-width:920px){
+      .container{grid-template-columns:1fr; padding:12px}
+      aside.sidebar{order:2}
+      main.content{order:1}
     }
   </style>
+  
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
-  <header>
-    <img src="https://i.postimg.cc/KvjvTjqm/JPEG-5299698858365424583.jpg" alt="صورة المعلم">
-    <h1>الأستاذ حمزة ابوحرب</h1>
+  <header class="app-header">
+    <div class="brand">
+      <img src="https://i.postimg.cc/KvjvTjqm/JPEG-5299698858365424583.jpg" alt="معلم">
+      <div>
+        <h1>الأستاذ حمزة أبوحرب</h1>
+        <p>منصة دروس الرياضيات — الصفوف 6 حتى 10</p>
+      </div>
+    </div>
+    <div class="header-actions small-muted">
+      <div>إربد - الحصن</div>
+    </div>
   </header>
 
-  <main id="home-page">
-    <p>
-      معلم رياضيات يمتلك خبرة تدريسية لمدة عام في تدريس الصفوف من السادس إلى التاسع، يتميز بقدرته على تبسيط المفاهيم الرياضية المعقدة بأساليب حديثة وممتعة تناسب مستويات الطلبة المختلفة. أعمل على تنمية التفكير التحليلي والمنطقي لدى الطلبة من خلال أنشطة تفاعلية وتمارين تطبيقية، وأسعى إلى خلق بيئة تعليمية محفزة تشجع على حب مادة الرياضيات والإبداع في حل المسائل.
-    </p>
-    <a href="#" class="button" onclick="openRegister()">تسجيل طالب جديد</a>
-  </main>
+  <div class="container">
+    <aside class="sidebar">
+      <div style="text-align:center; padding:10px 0; border-bottom: 1px solid #f0f6ff; margin-bottom: 10px;">
+        <p class="small-muted" style="margin:0;">للاطلاع على المواد، اضغط على زر **جميع الصفوف** في الصفحة الرئيسية.</p>
+      </div>
+      <div class="grade-list" id="gradeList" style="display:none"></div>
+      <div style="height:12px"></div>
+      <div class="card" style="padding:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="small-muted">التحكم (مخفي)</div>
+            <div class="small-muted" style="font-size:13px">اضغط زر ⚙️ أسفل الشاشة</div>
+          </div>
+        </div>
+      </div>
 
-  <section id="register-page">
-    <h2>تسجيل طالب جديد</h2>
-    <form id="studentForm" onsubmit="sendEmail(event)">
-      <label>اسم الطالب *</label>
-      <input type="text" id="studentName" required>
+    </aside>
 
-      <label>رقم الهاتف (الأساسي) *</label>
-      <input type="tel" id="mainPhone" required>
+    <main class="content">
+      <section id="welcome" class="card">
+        <h2 style="margin-top:0">مرحباً بك في منصة الأستاذ حمزة!</h2>
+        <p class="small-muted" style="margin:6px 0 16px 0">منصة متكاملة لدروس ومواد الرياضيات للصفوف من السادس حتى العاشر.</p>
+        
+        <div class="welcome-actions">
+          <button class="btn" onclick="openRegister()">تسجيل طالب جديد</button>
+          <button class="btn ghost" onclick="showAllGrades()">جميع الصفوف</button>
+        </div>
+        
+        <p class="small-muted" style="margin-top:16px">اختر صفك أو قم بتسجيل طالب جديد للانضمام.</p>
+      </section>
 
-      <label>رقم هاتف احتياطي</label>
-      <input type="tel" id="optionalPhone">
+      <section id="registerSection" class="card" style="display:none">
+        <h2>تسجيل طالب جديد</h2>
+        <form id="studentForm" onsubmit="sendEmail(event)">
+          <label for="studentName">اسم الطالب *</label>
+          <input type="text" id="studentName" required>
 
-      <label>اختر الصف *</label>
-      <select id="grade" required>
-        <option value="">-- اختر الصف --</option>
-        <option>الصف السادس</option>
-        <option>الصف السابع</option>
-        <option>الصف الثامن</option>
-        <option>الصف التاسع</option>
-        <option>الصف العاشر</option>
-      </select>
+          <label for="mainPhone">رقم الهاتف (الأساسي) *</label>
+          <input type="tel" id="mainPhone" required>
 
-      <button type="submit">تأكيد التسجيل</button>
-    </form>
-  </section>
+          <label for="optionalPhone">رقم هاتف احتياطي</label>
+          <input type="tel" id="optionalPhone">
 
-  <footer>
+          <label for="gradeSelect">اختر الصف *</label>
+          <select id="gradeSelect" required>
+            <option value="">-- اختر الصف --</option>
+            <option>الصف السادس</option>
+            <option>الصف السابع</option>
+            <option>الصف الثامن</option>
+            <option>الصف التاسع</option>
+            <option>الصف العاشر</option>
+          </select>
+
+          <button type="submit" class="btn">تأكيد التسجيل</button>
+          <button type="button" class="btn ghost" onclick="openWelcome()" style="margin-right:8px">عودة للصفحة الرئيسية</button>
+        </form>
+        
+        <div style="margin-top:30px; line-height: 1.6;">
+          <h3 style="margin-top:0">نبذة عن المعلم</h3>
+          <p class="small-muted">
+            معلم رياضيات يمتلك خبرة تدريسية لمدة عام في تدريس الصفوف من السادس إلى التاسع، يتميز بقدرته على تبسيط المفاهيم الرياضية المعقدة بأساليب حديثة وممتعة تناسب مستويات الطلبة المختلفة. أعمل على تنمية التفكير التحليلي والمنطقي لدى الطلبة من خلال أنشطة تفاعلية وتمارين تطبيقية، وأسعى إلى خلق بيئة تعليمية محفزة تشجع على حب مادة الرياضيات والإبداع في حل المسائل.
+          </p>
+        </div>
+      </section>
+      
+      <section id="gradeView" style="display:none">
+        <div class="card">
+          <div class="flex-row">
+            <div>
+              <h3 id="gradeTitle">الصف</h3>
+              <div id="gradeDesc" class="small-muted" style="margin-top:6px"></div>
+            </div>
+            <div style="display:flex; gap: 8px;">
+              <button class="btn ghost" onclick="openWelcome()">الرئيسية</button>
+              <div class="sem-buttons">
+                <button class="btn" id="sem1Btn" onclick="selectSemester(1)">الفصل الأول</button>
+                <button class="btn ghost" id="sem2Btn" onclick="selectSemester(2)">الفصل الثاني</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <div id="semDesc" class="small-muted"></div>
+          </div>
+
+          <div id="itemsArea">
+            <div class="items-grid" id="itemsGrid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="allGradesView" style="display:none">
+        <div class="card">
+          <div class="flex-row" style="margin-bottom: 12px;">
+            <div>
+              <h3 style="margin:0">جميع الصفوف المتاحة</h3>
+              <p class="small-muted" style="margin:4px 0 0 0;">اختر الصف الذي تبحث عن مواده.</p>
+            </div>
+            <button class="btn ghost" onclick="openWelcome()">العودة للرئيسية</button>
+          </div>
+          <div id="gradesListContainer" class="items-grid" style="margin-top:10px;"></div>
+        </div>
+      </section>
+
+      </main>
+  </div>
+
+  <footer class="app-footer">
     جميع الحقوق محفوظة © 2025<br>
     إربد - الحصن - طريق كتم
   </footer>
 
-  <!-- ✅ EmailJS Scripts -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script type="text/javascript">
-    (function(){
-      emailjs.init({
-        publicKey: "B_nVtAlMDQPInTVB4",
-      });
-    })();
+  <button id="admin-button" title="لوحة التحكم" onclick="openLogin()">⚙️</button>
 
-    function openRegister() {
-      document.getElementById('home-page').style.display = 'none';
-      document.getElementById('register-page').style.display = 'block';
+  <div id="modalBackdrop" class="modal-backdrop">
+    <div id="modal" class="modal" role="dialog" aria-modal="true"></div>
+  </div>
+
+  <script>
+    /* ========== DATA STRUCTURE in localStorage ========== */
+    const STORAGE_KEY = 'hamzeh_platform_v1';
+
+    const defaultData = {
+      grades: {
+        "6": { title:"الصف السادس", desc:"دروس تأسيسية ومناهج الصف السادس", sem1:{desc:"", items:[]}, sem2:{desc:"", items:[]}},
+        "7": { title:"الصف السابع", desc:"مراجعات ودروس مع أمثلة", sem1:{desc:"", items:[]}, sem2:{desc:"", items:[]}},
+        "8": { title:"الصف الثامن", desc:"تفصيل الوحدات والمهارات", sem1:{desc:"", items:[]}, sem2:{desc:"", items:[]}},
+        "9": { title:"الصف التاسع", desc:"تحضير لامتحانات والمهارات", sem1:{desc:"", items:[]}, sem2:{desc:"", items:[]}},
+        "10":{ title:"الصف العاشر", desc:"دروس متقدمة وتطبيقية", sem1:{desc:"", items:[]}, sem2:{desc:"", items:[]}}
+      },
+      // تم التعديل هنا: هذه البيانات هي التي تستخدم إذا لم يتم العثور على بيانات في المتصفح (localStorage)
+      admin: { username: "tchhamzeh", password: "Hh200321$" }
+    };
+
+    // هذا السطر يقرأ البيانات من الذاكرة المحلية (localStorage).
+    // إذا كانت الذاكرة تحتوي على بيانات قديمة، فإنها ستحجب البيانات الجديدة في defaultData.
+    // يجب التأكد من استخدام البيانات الجديدة كـ default.
+    let storedState = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+    
+    // إذا كانت هناك حالة مخزنة، نستخدمها.
+    // وإذا لم يكن هناك، نستخدم defaultData.
+    // الأهم: إذا كانت هناك حالة مخزنة، نضمن تحديث بيانات المدير داخلها لمرة واحدة فقط.
+    let state = storedState || defaultData;
+    
+    // تأكيد تحديث بيانات المدير في الحالة الحالية (سواء المخزنة أو الافتراضية) لضمان العمل.
+    if (!storedState || state.admin.username !== "tchhamzeh") {
+        state.admin.username = "tchhamzeh";
+        state.admin.password = "Hh200321$";
+        saveState(); // حفظ التعديل الجديد على الذاكرة المحلية
+    }
+
+    // persist to storage helper
+    function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+    /* Renders grades list in a specified container (used for public list and admin view) */
+    function renderGrades(targetEl, includeAdmin=false){
+      targetEl.innerHTML = '';
+      for(const g of Object.keys(state.grades)){
+        const gm = state.grades[g];
+        const div = document.createElement('div');
+        // Using item-card style for better presentation in the main content area
+        div.className = 'item-card'; 
+        
+        let actionsHtml = `<button class="btn" onclick="openGrade('${g}')">عرض المواد</button>`;
+        
+        // Admin actions are only included if the flag is set
+        if(includeAdmin && isAdmin){
+             actionsHtml = `<button class="btn ghost" onclick="openAdminForGrade(event,'${g}')">✏️</button>` + actionsHtml;
+        }
+
+        div.innerHTML = `<div><strong>${gm.title}</strong><div class="small-muted">${gm.desc}</div></div>
+                         <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">${actionsHtml}</div>`;
+                         
+        targetEl.appendChild(div);
+      }
+      if (targetEl.innerHTML === '') {
+          targetEl.innerHTML = '<div class="small-muted">لا تتوفر صفوف حالياً.</div>';
+      }
+    }
+
+
+    /* NAV / VIEW */
+    let currentGrade = null;
+    let currentSem = 1;
+    
+    function hideAllMainSections(){
+      document.getElementById('welcome').style.display = 'none';
+      document.getElementById('gradeView').style.display = 'none';
+      document.getElementById('allGradesView').style.display = 'none'; // New view
+      document.getElementById('registerSection').style.display = 'none';
+    }
+
+    function openGrade(grade){
+      currentGrade = grade;
+      currentSem = 1;
+      hideAllMainSections();
+      document.getElementById('gradeView').style.display = 'block';
+      updateGradeView();
+      window.scrollTo(0,0);
+    }
+    
+    function openWelcome(){
+      currentGrade = null;
+      hideAllMainSections();
+      document.getElementById('welcome').style.display = 'block';
       window.scrollTo(0,0);
     }
 
+    function openRegister() {
+      hideAllMainSections();
+      document.getElementById('registerSection').style.display = 'block';
+      window.scrollTo(0,0);
+    }
+    
+    function updateGradeView(){
+      const g = state.grades[currentGrade];
+      document.getElementById('gradeTitle').textContent = g.title;
+      document.getElementById('gradeDesc').textContent = g.desc;
+      document.getElementById('semDesc').textContent = (currentSem===1? g.sem1.desc : g.sem2.desc) || '';
+      document.getElementById('sem1Btn').className = currentSem===1 ? 'btn' : 'btn ghost';
+      document.getElementById('sem2Btn').className = currentSem===2 ? 'btn' : 'btn ghost';
+      renderItems();
+    }
+    function selectSemester(n){
+      currentSem = n;
+      updateGradeView();
+    }
+
+    /* All Grades View */
+    function showAllGrades(){
+        hideAllMainSections();
+        document.getElementById('allGradesView').style.display = 'block';
+        // Render grades without admin buttons for public viewing
+        renderGrades(document.getElementById('gradesListContainer'), false); 
+        window.scrollTo(0,0);
+    }
+
+    function renderItems(){
+      const grid = document.getElementById('itemsGrid');
+      grid.innerHTML = '';
+      const items = (currentSem===1 ? state.grades[currentGrade].sem1.items : state.grades[currentGrade].sem2.items) || [];
+      if(items.length===0){
+        grid.innerHTML = '<div class="small-muted">لا توجد مواد في هذا الفصل حالياً.</div>';
+        return;
+      }
+      items.forEach((it, idx)=>{
+        const card = document.createElement('div');
+        card.className = 'item-card';
+        if(it.type === 'video'){
+          // show iframe + title
+          const embed = convertYoutubeToEmbed(it.link);
+          card.innerHTML = `
+            <div class="item-title">${escapeHtml(it.title || 'فيديو')}</div>
+            <div class="item-type">فيديو (YouTube)</div>
+            <div><iframe class="video-frame" src="${embed}" allowfullscreen loading="lazy"></iframe></div>
+          `;
+        } else {
+          card.innerHTML = `
+            <div class="item-title">${escapeHtml(it.title || 'ملف')}</div>
+            <div class="item-type">ملف / رابط تحميل</div>
+            <div><a href="${escapeAttr(it.link)}" target="_blank" rel="noopener">فتح الملف / التحميل</a></div>
+          `;
+        }
+
+        // If admin logged in -> show edit/delete controls
+        if(isAdmin){
+          const actions = document.createElement('div');
+          actions.className = 'item-actions';
+          const editBtn = document.createElement('button');
+          editBtn.textContent = '✏️ تعديل';
+          editBtn.onclick = ()=> openEditItemModal(currentGrade, currentSem, idx);
+          const delBtn = document.createElement('button');
+          delBtn.textContent = '🗑️ حذف';
+          delBtn.onclick = ()=> {
+            if(confirm('هل تريد حذف هذا العنصر؟')){
+              deleteItem(currentGrade, currentSem, idx);
+            }
+          };
+          actions.appendChild(editBtn);
+          actions.appendChild(delBtn);
+          card.appendChild(actions);
+        }
+        grid.appendChild(card);
+      });
+    }
+
+    /* ========== ADMIN (hidden) ========== */
+    let isAdmin = false;
+    function openLogin(){
+      showModal(getLoginHtml(), true);
+    }
+
+    // This function will now be called from the Admin Panel modal
+    function openAdminForGrade(event, grade){
+      // event.stopPropagation(); is not needed here as it's not a sidebar click
+      if(!isAdmin){
+        alert('🔒 يجب تسجيل الدخول أولاً');
+        return openLogin();
+      }
+      // open direct to manage grade
+      showEditGradeModal(grade);
+    }
+
+    /* login handling */
+    function handleLoginSubmit(){
+      const user = document.getElementById('adminUser').value.trim();
+      const pass = document.getElementById('adminPass').value.trim();
+      
+      // تأكد من استخدام state.admin المحدثة
+      if(user === state.admin.username && pass === state.admin.password){
+        isAdmin = true;
+        closeModal();
+        alert('✅ تم تسجيل الدخول كمدير');
+        // open admin main panel
+        showModal(getAdminPanelHtml(), true);
+      } else {
+        alert('❌ بيانات الدخول خاطئة');
+      }
+    }
+
+    /* Admin main panel HTML */
+    function getAdminPanelHtml(){
+      return `
+        <h3>لوحة التحكم - إدارة المحتوى</h3>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+          <button class="btn" onclick="showAddItemModal()">إضافة مادة جديدة</button>
+          <button class="btn ghost" onclick="showManageGrades()">تعديل بيانات الصفوف</button>
+          <button class="btn ghost" onclick="showGradesForAdmin()">إدارة مواد الصفوف</button>
+          <button class="btn ghost" onclick="closeModal()">إغلاق</button>
+          <button class="btn danger" onclick="doLogout()">تسجيل خروج</button>
+        </div>
+        <div style="margin-top:14px;color:var(--muted)">تستطيع إضافة فيديو أو رابط ملف. يمكن تحرير أو حذف أي عنصر بعد إضافته.</div>
+        <div style="margin-top:12px" id="adminQuick"></div>
+      `;
+    }
+
+    /* Show grades list with admin buttons inside the admin panel modal */
+    function showGradesForAdmin(){
+        const adminQuick = document.getElementById('adminQuick');
+        adminQuick.innerHTML = '<h4>قائمة الصفوف (لإدارة المواد)</h4><div id="adminGradeList"></div>';
+        renderGrades(document.getElementById('adminGradeList'), true); // Render with admin buttons
+        document.getElementById('adminGradeList').className = 'grade-list'; // Apply simple list style for modal
+    }
+
+
+    /* show modal helpers */
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalEl = document.getElementById('modal');
+    function showModal(html, showBackdrop=true){
+      modalEl.innerHTML = html;
+      modalBackdrop.style.display = 'flex';
+      if(!showBackdrop) modalBackdrop.style.background='transparent';
+    }
+    function closeModal(){
+      modalBackdrop.style.display = 'none';
+      modalEl.innerHTML = '';
+    }
+    modalBackdrop.addEventListener('click', (e)=>{ if(e.target===modalBackdrop) closeModal(); });
+
+    /* login html */
+    function getLoginHtml(){
+      return `
+        <h3>تسجيل دخول المعلم</h3>
+        <div class="form-row" style="margin-top:12px">
+          <input id="adminUser" placeholder="اسم المستخدم" />
+          <input id="adminPass" placeholder="كلمة المرور" type="password" />
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn" onclick="handleLoginSubmit()">دخول</button>
+          <button class="btn ghost" onclick="closeModal()">إلغاء</button>
+        </div>
+        <div style="margin-top:10px;color:var(--muted);font-size:13px">اسم المستخدم: <strong>${state.admin.username}</strong> — كلمة المرور محفوظة محليًا.</div>
+      `;
+    }
+
+    /* Admin actions: add item modal */
+    function showAddItemModal(){
+      showModal(`
+        <h3>إضافة مادة جديدة</h3>
+        <div class="form-row" style="margin-top:12px">
+          <select id="addGrade">
+            ${Object.keys(state.grades).map(g=>`<option value="${g}">${state.grades[g].title}</option>`).join('')}
+          </select>
+          <select id="addSem">
+            <option value="1">الفصل الأول</option>
+            <option value="2">الفصل الثاني</option>
+          </select>
+        </div>
+        <div class="form-row" style="margin-top:8px">
+          <input id="addType" placeholder="نوع: video أو file" value="video" />
+        </div>
+        <div class="form-row" style="margin-top:8px">
+          <input id="addTitle" placeholder="عنوان المادة (مثال: درس الجمع)" />
+        </div>
+        <div class="form-row" style="margin-top:8px">
+          <input id="addLink" placeholder="رابط الفيديو أو رابط الملف (رابط كامل)" />
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn" onclick="doAddItem()">إضافة</button>
+          <button class="btn ghost" onclick="closeModal()">إلغاء</button>
+        </div>
+        <div style="margin-top:8px;color:var(--muted);font-size:13px">ملاحظة: لعرض فيديو YouTube بشكل صحيح ضع رابط الفيديو (مثل: https://www.youtube.com/watch?v=XXXXX)</div>
+      `);
+    }
+
+    function doAddItem(){
+      const g = document.getElementById('addGrade').value;
+      const sem = document.getElementById('addSem').value === '1' ? 'sem1' : 'sem2';
+      let type = document.getElementById('addType').value.trim().toLowerCase();
+      const title = document.getElementById('addTitle').value.trim();
+      const link = document.getElementById('addLink').value.trim();
+      if(!['video','file'].includes(type)){ alert('نوع غير صحيح، استخدم video أو file'); return; }
+      if(!title || !link){ alert('أكمل الحقول'); return; }
+      state.grades[g][sem].items.push({type, title, link});
+      saveState();
+      closeModal();
+      alert('✅ تمت الإضافة');
+      // refresh views if necessary
+      if(currentGrade===g) renderItems();
+    }
+
+    /* edit grade details modal */
+    function showManageGrades(){
+      showModal(`
+        <h3>تعديل بيانات الصفوف (العنوان والوصف)</h3>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
+          ${Object.keys(state.grades).map(g=>{
+            const gd = state.grades[g];
+            return `<div style="border:1px dashed #eef6ff;padding:8px;border-radius:8px">
+              <div style="font-weight:700">${gd.title}</div>
+              <div style="margin-top:6px">
+                <input id="title_${g}" value="${escapeAttr(gd.title)}" />
+              </div>
+              <div style="margin-top:6px">
+                <textarea id="desc_${g}">${escapeHtml(gd.desc)}</textarea>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:6px">
+                <button class="btn" onclick="saveGradeInfo('${g}')">حفظ</button>
+                <button class="btn ghost" onclick="resetGradeInfo('${g}')">إعادة</button>
+              </div>
+            </div>`;
+          }).join('')}
+          <div style="display:flex;justify-content:flex-end"><button class="btn ghost" onclick="closeModal()">إغلاق</button></div>
+        </div>
+      `);
+    }
+    function saveGradeInfo(g){
+      const t = document.getElementById(`title_${g}`).value.trim();
+      const d = document.getElementById(`desc_${g}`).value.trim();
+      if(!t){ alert('العنوان مطلوب'); return; }
+      state.grades[g].title = t;
+      state.grades[g].desc = d;
+      saveState();
+      if(currentGrade===g) updateGradeView();
+      alert('✅ حفظت التغييرات');
+    }
+    function resetGradeInfo(g){
+      document.getElementById(`title_${g}`).value = state.grades[g].title;
+      document.getElementById(`desc_${g}`).value = state.grades[g].desc;
+    }
+
+    /* open edit item modal */
+    function openEditItemModal(g, semNum, idx){
+      const semKey = semNum===1 ? 'sem1' : 'sem2';
+      const item = state.grades[g][semKey].items[idx];
+      showModal(`
+        <h3>تعديل المادة</h3>
+        <div class="form-row" style="margin-top:12px">
+          <select id="editType">
+            <option value="video" ${item.type==='video'?'selected':''}>video</option>
+            <option value="file" ${item.type==='file'?'selected':''}>file</option>
+          </select>
+          <input id="editTitle" value="${escapeAttr(item.title)}" />
+        </div>
+        <div class="form-row" style="margin-top:8px">
+          <input id="editLink" value="${escapeAttr(item.link)}" />
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn" onclick="doEditItem('${g}','${semKey}',${idx})">حفظ</button>
+          <button class="btn ghost" onclick="closeModal()">إلغاء</button>
+          <button class="btn danger" onclick="doDeleteItemConfirm('${g}','${semKey}',${idx})">حذف نهائي</button>
+        </div>
+      `);
+    }
+    function doEditItem(g, semKey, idx){
+      const type = document.getElementById('editType').value;
+      const title = document.getElementById('editTitle').value.trim();
+      const link = document.getElementById('editLink').value.trim();
+      if(!title || !link){ alert('أكمل الحقول'); return; }
+      state.grades[g][semKey].items[idx] = {type, title, link};
+      saveState();
+      closeModal();
+      alert('✅ تم التعديل');
+      if(currentGrade===g) renderItems();
+    }
+    function doDeleteItemConfirm(g, semKey, idx){
+      if(!confirm('هل تريد حذف هذا العنصر نهائياً؟')) return;
+      state.grades[g][semKey].items.splice(idx,1);
+      saveState();
+      closeModal();
+      alert('🗑️ تم الحذف');
+      if(currentGrade===g) renderItems();
+    }
+
+    function deleteItem(g, semNum, idx){
+      const semKey = semNum===1 ? 'sem1' : 'sem2';
+      state.grades[g][semKey].items.splice(idx,1);
+      saveState();
+      renderItems();
+    }
+
+    /* logout */
+    function doLogout(){
+      if(confirm('تأكيد تسجيل الخروج؟')){
+        isAdmin = false;
+        closeModal();
+        alert('🚪 تم تسجيل الخروج');
+        // Ensure the welcome section is shown after logout
+        openWelcome(); 
+      }
+    }
+
+    /* small helpers */
+    function escapeHtml(s){ if(!s) return ''; return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+    function escapeAttr(s){ if(!s) return ''; return s.replaceAll('"','&quot;').replaceAll("'",'&#39;'); }
+
+    function convertYoutubeToEmbed(url){
+      try{
+        if(!url) return '';
+        if(url.includes('embed/')) return url;
+        // extract v=
+        const u = new URL(url);
+        if(u.hostname.includes('youtube.com')){
+          const v = u.searchParams.get('v');
+          if(v) return `https://www.youtube.com/embed/${v}`;
+        }
+        // youtu.be short link
+        if(u.hostname.includes('youtu.be')){
+          const v = u.pathname.slice(1);
+          if(v) return `https://www.youtube.com/embed/${v}`;
+        }
+        // fallback: return url (may not embed)
+        return url;
+      }catch(e){
+        return url;
+      }
+    }
+
+    /* open edit grade modal from admin icon */
+    function showEditGradeModal(g){
+      showModal(`
+        <h3>إدارة صف: ${state.grades[g].title}</h3>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn" onclick="showAddItemModalFor('${g}')">إضافة مادة لهذا الصف</button>
+          <button class="btn ghost" onclick="showGradeItems('${g}')">عرض/تحرير مواد الصف</button>
+          <button class="btn ghost" onclick="closeModal()">إغلاق</button>
+        </div>
+      `);
+    }
+    function showAddItemModalFor(g){
+      showModal(`
+        <h3>إضافة مادة لصف ${state.grades[g].title}</h3>
+        <div class="form-row" style="margin-top:12px">
+          <select id="addGradeSpec"><option value="1">الفصل الأول</option><option value="2">الفصل الثاني</option></select>
+          <select id="addTypeSpec"><option value="video">video</option><option value="file">file</option></select>
+        </div>
+        <div class="form-row" style="margin-top:8px">
+          <input id="addTitleSpec" placeholder="عنوان المادة" />
+          <input id="addLinkSpec" placeholder="الرابط" />
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn" onclick="doAddItemFor('${g}')">إضافة</button>
+          <button class="btn ghost" onclick="closeModal()">إلغاء</button>
+        </div>
+      `);
+    }
+    function doAddItemFor(g){
+      const sem = document.getElementById('addGradeSpec').value === '1' ? 'sem1' : 'sem2';
+      const type = document.getElementById('addTypeSpec').value;
+      const title = document.getElementById('addTitleSpec').value.trim();
+      const link = document.getElementById('addLinkSpec').value.trim();
+      if(!title || !link){ alert('أكمل الحقول'); return; }
+      state.grades[g][sem].items.push({type,title,link});
+      saveState();
+      closeModal();
+      alert('✅ تمت الإضافة');
+      if(currentGrade===g) renderItems();
+    }
+
+    function showGradeItems(g){
+      let html = `<h3>مواد ${state.grades[g].title}</h3><div style="display:flex;gap:10px;flex-direction:column;margin-top:10px">`;
+      ['sem1','sem2'].forEach(sem=>{
+        html += `<div style="font-weight:700;margin-top:8px">${sem==='sem1'?'الفصل الأول':'الفصل الثاني'}</div>`;
+        const its = state.grades[g][sem].items;
+        if(its.length===0) html += `<div class="small-muted">لا مواد</div>`;
+        its.forEach((it,idx)=>{
+          html += `<div style="display:flex;gap:8px;align-items:center;margin-top:6px;border-bottom: 1px dotted #eee; padding-bottom: 4px;">
+                    <div style="flex:1"><strong>${escapeHtml(it.title)}</strong><div class="small-muted">${it.type} — <a href="${escapeAttr(it.link)}" target="_blank">فتح</a></div></div>
+                    <div style="display:flex;gap:6px">
+                      <button class="btn ghost" onclick="openEditItemModal('${g}', ${sem==='sem1'?1:2}, ${idx})">تعديل</button>
+                      <button class="btn danger" onclick="if(confirm('حذف؟')){ deleteItem('${g}', ${sem==='sem1'?1:2}, ${idx}); showGradeItems('${g}');}">حذف</button>
+                    </div>
+                  </div>`;
+        });
+      });
+      html += `<div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="btn ghost" onclick="closeModal()">إغلاق</button></div></div>`;
+      showModal(html);
+    }
+    
+    /* ========== EmailJS Functions (from second snippet) ========== */
+    
+    (function(){
+      if (typeof emailjs !== 'undefined') {
+        emailjs.init({
+          publicKey: "B_nVtAlMDQPInTVB4",
+        });
+      }
+    })();
+
     function sendEmail(event) {
       event.preventDefault();
+
+      if (typeof emailjs === 'undefined') {
+          alert("❌ خدمة البريد الإلكتروني غير متوفرة. يرجى التحقق من الاتصال بالإنترنت.");
+          return;
+      }
 
       const templateParams = {
         student_name: document.getElementById("studentName").value,
         main_phone: document.getElementById("mainPhone").value,
         optional_phone: document.getElementById("optionalPhone").value,
-        grade: document.getElementById("grade").value,
+        grade: document.getElementById("gradeSelect").value, // Using gradeSelect ID
       };
 
+      // NOTE: 'YOUR_TEMPLATE_ID' must be replaced with the actual EmailJS template ID
       emailjs.send("service_mshkh7p", "YOUR_TEMPLATE_ID", templateParams)
         .then(function(response) {
-          alert("✅ تم إرسال بيانات الطالب بنجاح!");
+          alert("✅ تم إرسال بيانات الطالب بنجاح! سيتم التواصل معكم قريباً.");
           document.getElementById("studentForm").reset();
+          openWelcome(); // Go back to welcome page
         }, function(error) {
           alert("❌ حدث خطأ أثناء الإرسال، حاول مرة أخرى.");
           console.log("FAILED...", error);
         });
     }
+
+    /* initial render */
+    // Removed the initial renderGrades() call as requested.
+
+    // ensure the welcome section is open initially
+    openWelcome(); 
+    // end of script
   </script>
 </body>
 </html>
